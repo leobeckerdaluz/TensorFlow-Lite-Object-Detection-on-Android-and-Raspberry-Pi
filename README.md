@@ -478,6 +478,23 @@ python TFLite_detection_webcam.py --modeldir=TFLite_model
 
 After a few moments of initializing, a window will appear showing the webcam feed. Detected objects will have bounding boxes and labels displayed on them in real time.
 
+##### Video stream
+To run the script to detect images in a video stream (e.g. a remote security camera), issue: 
+
+```
+python TFLite_detection_stream.py --modeldir=TFLite_model --streamurl="http://ipaddress:port/stream/video.mjpeg" 
+```
+
+After a few moments of initializing, a window will appear showing the video stream. Detected objects will have bounding boxes and labels displayed on them in real time.
+
+Make sure to update the URL parameter to the one that's being used by your security camera. It has to include authentication information in case the stream is secured.
+
+If the bounding boxes are not matching the detected objects, probably the stream resolution wasn't detected. In this case you can set it explicitly by using the `--resolution` parameter:
+
+```
+python TFLite_detection_stream.py --modeldir=TFLite_model --streamurl="http://ipaddress:port/stream/video.mjpeg" --resolution=1920x1080
+```
+
 ##### Video
 To run the video detection script, issue:
 
@@ -544,3 +561,6 @@ Here’s how you can check the version of TensorFlow you used for training.
 4. Check the TensorFlow version by issuing `tf.__version__` . It will respond with the version of TensorFlow. This is the version that you used for training. 
 
 #### Bazel configuration session for building GPU-enabled TensorFlow
+
+#### Building TensorFlow from source
+In case you run into error `error C2100: illegal indirection` during TensorFlow compilation, simply edit the file `tensorflow-build\tensorflow\tensorflow\core\framework\op_kernel.h`, go to line 405, and change `reference operator*() { return (*list_)[i_]; }` to `reference operator*() const { return (*list_)[i_]; }`. Credits go to: https://github.com/tensorflow/tensorflow/issues/15925#issuecomment-499569928
